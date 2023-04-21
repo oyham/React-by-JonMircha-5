@@ -44,4 +44,71 @@ const Contador = () => {
             <p>Contador en: {state.contador}</p>
         </div>
 ```
- 
+# 85. Reducers Hook useReducer
+Los case en MAYUSCULAS estan así por que se consideran constantes que nunca van a cambiar. La buena práctica es que tengamos un objeto que tenga las diferentes acciones que nuestra función va a tener para luego poder acceder a ellas a través de la connotación del "." a la hora de utilizar una función con nuestro dispatch.
+
+### Payload: dato que pasamos mediante el dispatch a la función reductora para que modifique el estado.
+```js
+case TYPES.INCREMENT_5:
+    return { contador: state.contador + action.payload }
+    ...
+const sumar5 = () => dispatch({ type: TYPES.INCREMENT_5, payload: 5 })
+```
+Contador.jsx:
+```js
+import { useState, useReducer } from "react"
+
+const initialState = { contador: 0 }
+
+const TYPES = {
+    INCREMENT: "INCREMENT",
+    INCREMENT_5: "INCREMENT_5",
+    DECREMENT: "DECREMENT",
+    DECREMENT_5: "DECREMENT_5",
+    RESET: "RESET",
+}
+
+function reducer(state, action) {
+    switch (action.type) {
+        case TYPES.INCREMENT:
+            return { contador: state.contador + 1 }
+        case TYPES.DECREMENT:
+            return { contador: state.contador - 1 }
+        case TYPES.INCREMENT_5:
+            return { contador: state.contador + action.payload }
+        case TYPES.DECREMENT_5:
+            return { contador: state.contador - action.payload }
+        case TYPES.RESET:
+            return initialState
+        default:
+            return state;
+    }
+}
+
+const Contador = () => {
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    const sumar = () => dispatch({ type: TYPES.INCREMENT })
+    const restar = () => dispatch({ type: TYPES.DECREMENT })
+    
+    const sumar5 = () => dispatch({ type: TYPES.INCREMENT_5, payload: 5 })
+    const restar5 = () => dispatch({ type: TYPES.DECREMENT_5, payload: 5 })
+
+    const reset = () => dispatch({type: TYPES.RESET})
+
+    return <>
+        <h3>Con useReducer</h3>
+        <div className="useReducer">
+            <button onClick={restar5}>-5</button>
+            <button onClick={restar}>-</button>
+            <button onClick={reset}>0</button>
+            <button onClick={sumar}>+</button>
+            <button onClick={sumar5}>+5</button>
+            <p>Contador en: {state.contador}</p>
+        </div>
+    </>
+}
+
+export default Contador
+```
+---
