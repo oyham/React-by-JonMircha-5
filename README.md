@@ -112,3 +112,93 @@ const Contador = () => {
 export default Contador
 ```
 ---
+# 86. Reducers. Estructura de Archivos
+Para que va a servir el 3er parametro del reducer? Para cambiar el valor del segundo parámetro.
+
+Llamaremos al tercer valor "init". Lo declaramos como constante bajo el "initialState", hará uso de este y retornará la prop que tenga dentro más el nuevo valor a asignar: 
+```js
+const init = (initialState) => {
+    return {
+        contador: initialState.contador + 100,
+    }
+...
+const [state, dispatch] = useReducer(reducer, initialState, init)    
+```
+Recordar ingresar al valor "contador" con la connotación del "." ya que nuestro estado inicial es un objeto. Al precionar el botón de 0, el contador volverá a su estado inicial 0, ya que "init" sólo sirve cuando se *monta* el componente.
+
+Ahora duplicaremos `Contador.jsx` hacia `ContadorMejorado.jsx` para mejorar su estructura. Tener una carpeta para las acciones y otra para los reductores: `actions / reducers`. Jon utiliza lowerCamelCase pero también es valido un "contador.reducer.jsx" en este caso... otra manera es crear una carpeta llamada ContadorReducer y dentro poseer un "index.jsx". También creamos `contadorActions.jsx`.
+
+En el archivo `contadorReducer` nos llevaremos la funcion reductora, el estado inicial y el init... no olvidar de exportar las 2 constantes y la función. Tambien necesitamos importar el `contadorActions` que devolverá la const TYPES. Todas las exportaciones no deben de ser por default. 
+
+ContadorMejorado:
+```js
+import { useReducer } from "react"
+import { contadorReducer, contadorInitialState, contadorInit } from "../reducers/contadorReducer"
+import { TYPES } from "../actions/contadorActions"
+
+const ContadorMejorado = () => {
+    const [state, dispatch] = useReducer(contadorReducer, contadorInitialState, contadorInit)
+
+    const sumar = () => dispatch({ type: TYPES.INCREMENT })
+    const restar = () => dispatch({ type: TYPES.DECREMENT })
+    const sumar5 = () => dispatch({ type: TYPES.INCREMENT_5, payload: 5 })
+    const restar5 = () => dispatch({ type: TYPES.DECREMENT_5, payload: 5 })
+    const reset = () => dispatch({type: TYPES.RESET})
+
+    return <>
+        <h3>Contador Mejorado Reducer</h3>
+        <div className="useReducer">
+            <button onClick={restar5}>-5</button>
+            <button onClick={restar}>-</button>
+            <button onClick={reset}>0</button>
+            <button onClick={sumar}>+</button>
+            <button onClick={sumar5}>+5</button>
+            <p>Contador en: {state.contador}</p>
+        </div>
+    </>
+}
+
+export default ContadorMejorado
+```
+contadorReducer.jsx:
+```js
+import { TYPES } from "../actions/contadorActions"
+
+export const contadorInitialState = { contador: 0 }
+
+export const contadorInit = (initialState) => {
+    return {
+        contador: initialState.contador + 100,
+    }
+}
+
+export function contadorReducer(state, action) {
+    switch (action.type) {
+        case TYPES.INCREMENT:
+            return { contador: state.contador + 1 }
+        case TYPES.DECREMENT:
+            return { contador: state.contador - 1 }
+        case TYPES.INCREMENT_5:
+            return { contador: state.contador + action.payload }
+        case TYPES.DECREMENT_5:
+            return { contador: state.contador - action.payload }
+        case TYPES.RESET:
+            return contadorInitialState
+        default:
+            return state;
+    }
+}
+```
+contadorActions.jsx
+```js
+export const TYPES = {
+    INCREMENT: "INCREMENT",
+    INCREMENT_5: "INCREMENT_5",
+    DECREMENT: "DECREMENT",
+    DECREMENT_5: "DECREMENT_5",
+    RESET: "RESET",
+}
+```
+Esta es la manera correcta para trabajar los Reducers.
+
+---
