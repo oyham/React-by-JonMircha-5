@@ -281,3 +281,27 @@ export const TYPES = {
 }
 ```
 ---
+# 88. Carrito de Compras con Reducers (2/5)
+Creamos la variable de estado  con useReducer, importando asi la función reductora y el objeto de estado inicial.
+Para poder renderizar los productos creamos un componente `ProductItem.jsx`. Destructurara la *"data"* que sería el id, el nombre y el precio, además de un metodo que tendremos en ShoppingCart que permita agregarlo al carrito.
+La propiedad "addToCart" se definirá en nuestro ShoppingCart. Destructuramos el estado inicial de state y creamos las funciones necesarias para añadir, remover y limpiar el carrito.
+
+En nuestro article con la clase "box" es donde renderizaremos los productos. Para ello realizaremos un mapeo de la prop product que es la que destructuramos del estado inicial previamente, y por cada mapeo iremos llamando a nuestro componente `<ProducItem />`, y pasaremos como props la key, la data y la función addToCart.
+
+Ahora en ProductItem destructuraremos la data siendo esta id, name, y price. Devolvera un h4 con el nombre, un h5 con el precio y por ultimo un botón que en su onClick desplegará la función de addToCart ¿Pero cómo sabe que elemento añadir al carrito? Bueno, para eso tenemos el *id*, y haremos uso de una "Arrow Function Callback" o "Callback de función de flecha". 
+
+#### Diferencias entre utilizar 'onClick={()=>addToCart(id)}' o 'onClick={addToCart}':
+**En ReactJS, el primer método onClick={()=>addToCart(id)} se llama "Arrow Function Callback" o "Callback de función de flecha". En este caso, se crea una nueva función de flecha cada vez que se renderiza el componente, lo que permite pasar argumentos adicionales a la función.**
+
+**Por otro lado, el segundo método onClick={addToCart} se llama "Function Reference Callback" o "Callback de referencia de función". En este caso, se pasa una referencia directa a la función sin pasar ningún argumento adicional, por lo que la función debe tener acceso al valor correcto del argumento id para realizar la tarea deseada.**
+
+__Ambos métodos son comunes en la programación con ReactJS y se utilizan para manejar eventos como clics de botón, cambios en formularios, entre otros. La elección del método depende de la necesidad específica de cada caso.__
+
+Añadimos algo de CSS para los productos.
+
+---
+# 89. Carrito de Compras con Reducers (3/5)
+---
+# 90. Carrito de Compras con Reducers (4/5)
+---
+# 91. Carrito de Compras con Reducers (5/5)
