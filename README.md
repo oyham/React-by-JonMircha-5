@@ -297,10 +297,83 @@ Ahora en ProductItem destructuraremos la data siendo esta id, name, y price. Dev
 
 __Ambos métodos son comunes en la programación con ReactJS y se utilizan para manejar eventos como clics de botón, cambios en formularios, entre otros. La elección del método depende de la necesidad específica de cada caso.__
 
+ProductItem.jsx:
+```js
+import React from 'react'
+
+const ProductItem = ({ data, addToCart }) => {
+    let { id, name, price } = data
+    return (
+        <div style={{ border: "thin solid gray", padding: "1rem" }}>
+            <h4>{name}</h4>
+            <h5>${price}.00</h5>
+            <button onClick={() => addToCart(id)}>Agregar</button>
+        </div>
+    )
+}
+
+export default ProductItem
+```
+ShoppingCart.jsx:
+```js
+import React, { useReducer } from 'react'
+import { shoppingInitialState, shoppingReducer } from '../reducers/shoppingReducer'
+import ProductItem from './ProductItem'
+
+const ShoppingCart = () => {
+    const [state, dispatch] = useReducer(shoppingReducer, shoppingInitialState)
+    const { products, cart } = state
+
+    const addToCart = (id) => {
+        console.log(id)
+    }
+
+    const delFromCart = () => { }
+
+    const clearCart = () => { }
+    ...
+            <artice className="box grid-responsive">
+                {products.map((product) => <ProductItem key={products.id} data={product} addToCart={addToCart} />)}
+            </artice>
+```
 Añadimos algo de CSS para los productos.
 
 ---
 # 89. Carrito de Compras con Reducers (3/5)
+Creamos el componente CartItem que se encargará de reenderizar los productos que iremos añadiendo a nuestro carrito. En nuestro segundo article en nuestro ShoppingCart rendeerizamos dicho CartItem con un map de cada item e index. Pasara como prop la key, la data y delFromData para que cada producto posea dicha función. Abajo del article creamos un botón que llamará a la función de limpiar el carrito.
+
+Luego de esto pasico, nos vamos a la función addToCart y pasamos como parametro el *id* si es que no lo habian pasado previamente para hacer uso del dispatch, justamente en su payload pasaremos el ID. En nuestro case ADD_TO_CART primero debemos de buscar el id en la lista de nuestros productos y guardarlo en una variable.
+
+Creamos la let newItem y le diremos que acceda al estado, dentro de este tiene un arreglo llamado products, y que busque con *find*, diciendole que por cada product busque el product.id, y cuando éste sea igual a nuestro action.payload lo guarde en nuestra variable. `let newItem = state.products.find(product => product.id === action.payload)`
+
+Ahora para que que vaya mostrando el producto que añadamos a traves de ADD_TO_CART debemos de retornar cart... la manera de Jon fue la siguiente: `return {...state, cart: [...state.cart, newItem]}`, y la mía fue: `return {...state,cart: state.cart.concat(newItem)};`. 
+
+Luego implementaremos la UI en nuestro CartItem, destructuramos data y delFromCart. Destructuramos el id, name y price de data. Y sólo queda pintar casi igual que en ProductItem. Tambien añadiremos otro botón por si queremos añadir mas de un mismo producto.
+
+CartItem.jsx:
+```js
+const CartItem = ({ data, delFromCart }) => {
+    let { id, name, price } = data;
+    return (
+        <div style={{ border: "thin solid gray", padding: "1rem" }}>
+            <h4>{name}</h4>
+            <h5>${price}.00</h5>
+            <button onClick={() => delFromCart(id)}>Eliminar</button>
+            <button>Eliminar Todos</button>
+        </div>
+    )
+}
+
+export default CartItem
+```
+ShoppingCart.jsx:
+```js
+<h3>Carrito</h3>
+    <article className="box" style={{ display: "flex" }}>
+        {cart.map((item, index) => <CartItem key={index} data={item} delFromCart={delFromCart} />)}
+        <button onClick={clearCart}>Limpiar Carrito</button>
+    </article>
+```
 ---
 # 90. Carrito de Compras con Reducers (4/5)
 ---
