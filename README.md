@@ -376,5 +376,66 @@ ShoppingCart.jsx:
 ```
 ---
 # 90. Carrito de Compras con Reducers (4/5)
+#### Pude completar las funciones restantes aunque el método de Jon se ve mucho mejor.
+
+Jon:
+```js
+case TYPES.ADD_TO_CART: {
+            let newItem = state.products.find(
+                (product) => product.id === action.payload
+            )
+
+            let itemInCart = state.cart.find((item) => item.id === newItem.id)
+
+            return itemInCart
+                ? {
+                    ...state,
+                    cart: state.cart.map((item) =>
+                        item.id === newItem.id
+                            ? { ...item, quantity: item.quantity + 1 }
+                            : item
+                    ),
+                } : {
+                    ...state,
+                    cart: [...state.cart, { ...newItem, quantity: 1 }]
+                }
+        }
+```
+Mio:
+```js
+case TYPES.ADD_TO_CART: {
+            const productId = action.payload;
+            const productToAdd = state.products.find(product => product.id === productId);
+            const itemIndex = state.cart.findIndex(item => item.id === productId);
+
+            if (itemIndex !== -1) {
+                // El producto ya se encuentra en el carrito, incrementar la cantidad
+                const updatedCart = [...state.cart];
+                updatedCart[itemIndex].quantity += 1;
+                updatedCart[itemIndex].quantity -= .5;
+                console.log(updatedCart)
+                return {
+                    ...state,
+                    cart: updatedCart
+                };
+            } else {
+                // El producto no se encuentra en el carrito, agregar con cantidad 1
+                const newItem = { ...productToAdd, quantity: 1 };
+                return {
+                    ...state,
+                    cart: [...state.cart, newItem]
+                };
+            }
+        }
+```
+En el método de Jon nos ahorramos tener que poner la propiedad quantity manualmente. El se pregunta si ya existe el nuevo item en la cart y si da a verdadero le añade la prop quantity++. Si no existe se la añade de igual manera en 1.
+
+Por mi parte la prop quantity se la tenía que añadir a todos los productos = 1 para tenerlo como referencia cuando se añadia a la cart ya poseían esa prop. Ademas de que yo poseía un error que al añadir al carrito sumaba x2 en vez de x1 y no pude encontrar solución alguna mas que hacer esto: 
+```js
+                updatedCart[itemIndex].quantity += 1;
+                updatedCart[itemIndex].quantity -= .5;
+```
+Muy desprolijo. 
+
 ---
 # 91. Carrito de Compras con Reducers (5/5)
