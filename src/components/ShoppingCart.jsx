@@ -12,13 +12,17 @@ const ShoppingCart = () => {
         dispatch({ type: TYPES.ADD_TO_CART, payload: id })
     }
 
-    const delFromCart = (id) => {
-        dispatch({ type: TYPES.REMOVE_ONE_FROM_CART, payload: id })
+    const delFromCart = (id, all = false) => {
+        if(all){
+            dispatch({ type: TYPES.REMOVE_ALL_FROM_CART, payload: id })
+        } else {
+            dispatch({ type: TYPES.REMOVE_ONE_FROM_CART, payload: id })
+        }
     }
 
-    const delAllFromCart = (id) => {
+    /* const delAllFromCart = (id) => {
         dispatch({ type: TYPES.REMOVE_ALL_FROM_CART, payload: id })
-    }
+    } */
 
     const clearCart = () => {
         dispatch({ type: TYPES.CLEAR_CART })
@@ -32,7 +36,7 @@ const ShoppingCart = () => {
             </article>
             <h3>Carrito</h3>
             <article className="box" style={{ display: "flex" }}>
-                {cart.map((item, index) => <CartItem key={index} data={item} delFromCart={delFromCart} delAllFromCart={delAllFromCart}/>)}
+                {cart.map((item, index) => <CartItem key={index} data={item} delFromCart={delFromCart}/>)}
                 <button onClick={clearCart}>Limpiar Carrito</button>
             </article>
         </div>

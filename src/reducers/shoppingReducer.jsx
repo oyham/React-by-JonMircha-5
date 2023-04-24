@@ -12,18 +12,16 @@ export const shoppingInitialState = {
             id: 3, name: "Producto 3", price: 300,
         },
         {
-            id: 4, name: "Producto 4", price: 400, 
+            id: 4, name: "Producto 4", price: 400,
         },
         {
-            id: 5, name: "Producto 5", price: 500, 
+            id: 5, name: "Producto 5", price: 500,
         },
         {
-            id: 6, name: "Producto 6", price: 600, 
+            id: 6, name: "Producto 6", price: 600,
         },
     ],
-    cart: [
-
-    ]
+    cart: []
 }
 
 export function shoppingReducer(state, action) {
@@ -74,6 +72,19 @@ export function shoppingReducer(state, action) {
             }
         } */
         case TYPES.REMOVE_ONE_FROM_CART: {
+            let itemToDelete = state.cart.find((item) => item.id === action.payload)
+
+            return itemToDelete.quantity > 1 ? {
+                ...state,
+                cart: state.cart.map((item) => item.id === action.payload
+                    ? { ...item, quantity: item.quantity - 1 }
+                    : item),
+            } : {
+                ...state,
+                cart: state.cart.filter((item) => item.id !== action.payload)
+            }
+        }
+        /* case TYPES.REMOVE_ONE_FROM_CART: {
             const productId = action.payload;
             const itemIndex = state.cart.findIndex(item => item.id === productId)
             if (itemIndex >= 0) {
@@ -92,27 +103,21 @@ export function shoppingReducer(state, action) {
                 };
             }
             return state;
-        }
+        } */
         case TYPES.REMOVE_ALL_FROM_CART: {
-            const productId = action.payload;
-            const itemIndex = state.cart.findIndex(item => item.id === productId);
-            if (itemIndex >= 0) {
-                const updatedCart = [...state.cart];
-                const productsToRemove = updatedCart.filter(item => item.id === productId);
-                productsToRemove.forEach(product => updatedCart.splice(updatedCart.indexOf(product), 1));
-                return {
-                    ...state,
-                    cart: updatedCart
-                };
-            }
-            return state;
+            return {
+                ...state,
+                cart: state.cart.filter((item) => item.id !== action.payload)
+            } 
         }
-        case TYPES.CLEAR_CART: {
+
+        case TYPES.CLEAR_CART: return shoppingInitialState
+        /* case TYPES.CLEAR_CART: {
             return {
                 ...state,
                 cart: []
             }
-        }
+        } */
         default:
             return state
     }

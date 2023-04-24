@@ -439,3 +439,37 @@ Muy desprolijo.
 
 ---
 # 91. Carrito de Compras con Reducers (5/5)
+Por mi parte habia implementado un *"delAllFromCart"* para que a la hora de apretar el botón de Eliminar todos, pero Jon centralizo la lógica de la eliminación de Eliminar y Eliminar todos en en *"delFromCart"*, pasando como argumentos ademas el id, un "all = false" y dentro un condicional preguntando que si es falso estamos mandando a llamar el botón de Eliminar, y si es true ejecutar el Eliminar todos.
+
+Vamos a entender un poco la lógica que aplica Jon a:
+```js
+            return itemToDelete.quantity > 1 ? {
+                ...state,
+                cart: state.cart.map((item) => item.id === action.payload
+                    ? { ...item, quantity: item.quantity - 1 }
+                    : item)
+            } : {}
+```
+Para eliminar de uno en uno es lógico preguntarnos si el item a eliminar, en su propiedad quantity que se debió de crear previamente al añadir un producto al cart, es mayor a 1. Nos copiamos el estado anterior con el spred-operator, y luego nos enfocamos en el atributo cart. Accedemos a la propiedad cart del estado, generamos un map para crear un nuevo arreglo, y le decimos que por cada item que pasemos evalua lo siguiente. Si el item del ID coresponde al action.payload entonces generamos un nuevo operador ternario. Parte verdadera, retornamos toda la información del Item, del producto en cuestion, pero modificando su propiedad quantity al valor que ya tenía previamente pero restandole uno. Caso contrario, cómo no es el item que queremos eliminar, entonces que regrese el item con toda la información que ta tenía. Esto es programación funcianl PURA.
+
+Caso contrario:
+```js
+:{
+    ...state,
+    cart: state.cart.filter((item) => item.id === action.payload)
+    }
+```
+Realizamos una copia del estado, y luego modificamos cart. Filtramos del state.cart, por cada item que recibe el filter, evalúa que cuando item.id sea diferente del action.payload se irá agregando al nuevo arreglo del estado, y cuando coincída, lo va a ir eliminando.
+
+Ahora para remover todos los productos individuales realizamos esto: 
+```js
+        case TYPES.REMOVE_ALL_FROM_CART: {
+            return {
+                ...state,
+                cart: state.cart.filter((item) => item.id !== action.payload)
+            } 
+        }
+```
+Es exactamente a el caso contrario de remove_one.
+
+--- 
