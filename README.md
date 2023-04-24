@@ -473,3 +473,48 @@ Ahora para remover todos los productos individuales realizamos esto:
 Es exactamente a el caso contrario de remove_one.
 
 --- 
+# 92. CRUD API con Reducers (1/2)
+Creamos los archivos reducer y actions para nuestro crudApi. 
+
+```js
+export const TYPES = {
+    CREATE_DATA: "CREATE_DATA",
+    READ_ALL_DATA: "READ_ALL_DATA",
+    READ_ONE_DATA: "READ_ONE_DATA",
+    UPDATE_DATA: "UPDATE_DATA",
+    DELETE_DATA: "DELETE_DATA",
+    NO_DATA: "NO_DATA",
+}
+```
+```js
+import { TYPES } from "../actions/crudActions";
+
+export const crudInitialState = {
+    db: null
+}
+
+export function crudReducer(state, action) {
+    switch (action.type) {
+        case TYPES.READ_ALL_DATA: {
+            return null
+        }
+        case TYPES.CREATE_DATA: {
+            return null
+        }
+        case TYPES.READ_ONE_DATA: {
+            return null
+        }
+        case TYPES.UPDATE_DATA: {
+            return null
+        }
+        case TYPES.DELETE_DATA: {
+            return null
+        }
+        case TYPES.NO_DATA: {
+            return crudInitialState
+        }
+        default:
+            return state
+    }
+}
+```
