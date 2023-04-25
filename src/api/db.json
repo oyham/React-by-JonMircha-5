@@ -6,11 +6,6 @@
       "constellation": "Pegaso"
     },
     {
-      "id": 2,
-      "name": "Shiru",
-      "constellation": "Dragón"
-    },
-    {
       "id": 3,
       "name": "Hyoga",
       "constellation": "Cisne"
@@ -29,11 +24,6 @@
       "id": 6,
       "name": "Mú",
       "constellation": "Aries"
-    },
-    {
-      "id": 7,
-      "name": "Saga",
-      "constellation": "Geminis"
     }
   ]
 }

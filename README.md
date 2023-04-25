@@ -518,3 +518,72 @@ export function crudReducer(state, action) {
     }
 }
 ```
+# 93. CRUD API con Reducers (2/2)
+Yo creí que debiamos de pasar toda la lógica de las peticiones hacía el crudReducer pero recordé que no se pueden realizar peticiones en el reducer. Lo que si inicializamos una variable de tipo reducer con su crudReducer y su crudInitialState, ademas de destructurar la variable db proveniende de state.
+
+Lo primero que debemos hacer es reemplazar el setDb(res) por el dispatch que lee toda la data, pasandole como payload esa respuesta. Ahora en el reducer debemos de programar el return, accedemos al estado y en la propiedad db le decimos que haga un mapeo de la respuesta, en este caso, de la action.payload, y por cada data devuelva data. Esto se hace para asegurar de que debemos de recorrer el objeto por si hay algun nuevo tipo de dato.
+
+Ahora en el caso de que no haya datos, en la parte que seteabamos la db en nula, llamaremos al dispatch de NO_DATA, sin payload, ya que esta retornara el estado inicial, siendo esta nula.
+
+Para la parte de la creación de datos, debemos de llamar el dispatch de CREATE_DATA, y en su payload pasar la *res*. Luego en el reducer debemos de retornar una copia del estado en su propiedad db, y que haga una copia de state.db con un spread-operator, y añadirle lo que venga en la respuesta.
+
+En el update data haremos el dispatch correspondiente y pasaremos como payload la prop *data* proveniente del form. Luego la logica de la variable newData la pasamos a nuestro reducer y reemplazamos las variables correspondientes quedanto esto asi: <br>
+`let newData = db.map(el => el.id === data.id ? data : el)` por => <br> `state.db.map(el => el.id === action.payload.id ? action.payload : el)`<br>
+Retornará la newData asignandola a la prop db cómo hicimos previamente.
+
+Ahora bien, READ_ONE_DATA no lo vamos a necesitar para este ejercicio. Pero si la accion dependiera de buscar un sólo registro hacia una API externa, ahí si nos serviría.
+
+Para el delete data llamamos al dispatch respectivo y pasamos como payload el id. <br>
+`let newData = db.filter(el => el.id !== id)` => `... state.db.filter(el => el.id !== action.payload)`
+Con esto terminariamos.
+
+crudReducer.jsx:
+```js
+import { TYPES } from "../actions/crudActions";
+
+export const crudInitialState = {
+    db: null
+}
+
+export function crudReducer(state, action) {
+    switch (action.type) {
+        case TYPES.READ_ALL_DATA: {
+            return {
+                ...state,
+                db: action.payload.map(data => data)
+            }
+        }
+        case TYPES.CREATE_DATA: {
+            return {
+                ...state,
+                db: [...state.db, action.payload]
+            }
+        }
+        /* case TYPES.READ_ONE_DATA: {
+            return null
+        } */
+        case TYPES.UPDATE_DATA: {
+            let newData = state.db.map(el => el.id === action.payload.id ? action.payload : el)
+            return {
+                ...state,
+                db: newData
+            }
+        }
+        case TYPES.DELETE_DATA: {
+            let newData = state.db.filter(el => el.id !== action.payload)
+            return {
+                ...state,
+                db: newData
+            }
+        }
+        case TYPES.NO_DATA: {
+            return crudInitialState
+        }
+        default:
+            return state
+    }
+}
+```
+En el CrudApi solo reemplazamos los setDb por los distpach y pasar la lógica al reducer.
+
+---
